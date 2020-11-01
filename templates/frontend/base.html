@@ -1,0 +1,18 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static './css/main.css' %}">
+    <link rel="stylesheet" href="{% static './lib/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static './lib/fontawesome/css/all.min.css' %}">
+    <script src="{% static './lib/jquery/jquery-2.2.4.js' %}"></script>
+    <script src="{% static './lib/popper/popper.min.js' %}"></script>
+    <script src="{% static './lib/bootstrap/js/bootstrap.min.js' %}"></script>
+</head>
+<body class="bgColor">
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

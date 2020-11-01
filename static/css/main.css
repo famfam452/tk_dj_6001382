@@ -1,0 +1,23 @@
+.midpost {
+    padding-left: 30%;
+    padding-top: 20%;
+    padding-right: 30%;
+    padding-bottom: 20%;
+}
+.middleNav {
+    padding-left: 40%;
+}
+.bgColor {
+    background-color: teal;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: gainsboro;
+    color: grey;
+    text-align: right;
+    padding-right: 4%;
+}

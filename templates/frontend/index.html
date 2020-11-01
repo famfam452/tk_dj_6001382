@@ -1,0 +1,18 @@
+{% extends 'frontend/baseNav.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="midpost">
+    <h2>Naiive Baye <span class="badge badge-secondary">Classification</span></h2>
+        <div class="input-group mb-3">
+            {{ form }}
+            <div class="input-group-append">
+            <button class="btn btn-outline-dark" type="submit" id="button-addon2">GO</button>
+            </div>
+        </div>
+    </div>
+    
+</form>
+
+{% endblock %}

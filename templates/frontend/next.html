@@ -1,0 +1,33 @@
+{% extends 'frontend/baseNav.html' %}
+{% block title %}Begin{% endblock %}
+{% block content %}
+<div class="container mt-5 mb-5">
+<div class="card text-left mb-3">
+  <div class="card-body">
+    <h4 class="card-title">CSV Data File to Predict Naiivebaye Classification Algorithm </h4>
+    <p class="card-text">Avaleble for .CSV file , Suggession: Data table should have 2 or more Attibute and Data should not be Continuous </p>
+  </div>
+</div>
+    <form action="/csv-upload" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" value="{{ nameof }}" name="nameOf">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+            </div>
+            <div class="custom-file">
+              {{ fileform }}
+              <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+            </div>
+          </div>
+        <button type="submit" class="btn btn-dark">Upload</button>
+    </form>
+</div>
+<script type="text/javascript">
+    $('.custom-file-input').on('change', function() {
+        let fileName = $(this).val().split('\\').pop();
+        $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
+});
+</script>
+{% endblock %}
+

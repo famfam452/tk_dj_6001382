@@ -1,0 +1,148 @@
+{% extends 'frontend/baseNav.html' %}
+{% block title %}Table{% endblock %}
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{  nameof }}</h4>
+          <p class="card-text">Your Data,Choose label 's attribute for predict class acording to setting data</p>
+          <table class="table">
+              <thead>
+                  <tr>
+                      {% for i in Attribute %}
+                      <th>{{ i }}</th>
+                      {% endfor %}
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for row in DataInstance %}
+                  <tr>
+                      {% for x in row %}
+                      <td>{{ x }}</td>
+                      {% endfor %}
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+            <form id="form_table">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="classlabel">Choose Class Label</label>
+                <select class="form-control" name="classlabel" id="classlabel">
+                    {% for i in Attribute %}
+                        <option>{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="demo"></div>
+            <div id="anwser"></div>
+            <button type="button" id="enter" class="btn btn-success" disabled>Calculate</button>
+            </form>
+        </div>
+      </div>
+</div>
+
+<script type="text/javascript">
+        a = [];
+        k = [];
+        counter = 0;
+        {% for i in Attribute %}
+        a.push("{{ i }}");
+        {% endfor %}
+        {% for j in DataInstance %}
+        b = [];
+        {% for ki in j %}
+        b.push("{{ ki }}");
+        {% endfor %}
+        counter = {{ forloop.counter }};
+        k.push(b);
+        {% endfor %}
+    $("#classlabel").change(function(){
+        $.ajax({
+            type:'POST',
+            url:"{% url 'select-class_' %}",
+            data:{
+                nameof:'{{ nameof }}',
+                classLabel:$('#classlabel').val(),
+                attribute:a,
+                instance:k,
+                counters:counter,
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success:function(response){
+                $('#demo').empty();
+                $('#anwser').empty();
+                console.log(response);
+                console.log(response['Selector']);
+                atr_new_len = response['Attribute2'].length;
+                atr2 = response['Attribute2'];
+                var i;
+                for (i = 0;i<atr_new_len;i++){
+                    var j;
+                    data_num = response['Selector'][atr2[i]].length;
+                    html = '';
+                    html += '<div class="input-group mb-3">';
+                    html += '<div class="input-group-prepend"><label class="input-group-text" for="Selector[]">'+atr2[i]+'</label></div>';
+                    html += '<select class="custom-select" id="'+'Selector'+i+'">';
+                    for(j = 0;j<data_num;j++){
+                        html += '<option value='+response['Selector'][atr2[i]][j]+'>'+response['Selector'][atr2[i]][j]+'</option>';
+                    }
+                    html += '</select></div>';
+                    $('#demo').append(html);
+                }
+                $('#enter').removeAttr('disabled');
+            }
+        });
+    });
+    $('#enter').click(function(){
+        var num;
+        o_set = {};
+        iput = [];
+        at_iput = [];
+        for(num = 0;num<atr_new_len;num++){
+            param = '#Selector'+num;
+            ky = "" + $(param).val();
+            vl = "" + atr2[num];
+            o_set = Object.assign(o_set,{[vl]:ky});
+            iput.push(ky);
+            at_iput.push(vl);
+        }
+        console.log(o_set);
+        $.ajax({
+            type:'POST',
+            url:"{% url 'calculator' %}",
+            data:{
+                nameof:'{{ nameof }}',
+                classLabel:$('#classlabel').val(),
+                attribute:a,
+                instance:k,
+                counters:counter,
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                input:iput,
+                attibute2:at_iput,
+                input_instance:o_set,
+            },
+            success:function(response){
+                console.log(response);
+                $('#anwser').empty();
+                _classes = Object.keys(response['result_all']);
+                num_classes = _classes.length;
+                anw = '';
+                anw += '<div class="alert alert-success" role="alert">';
+                var i;
+                for(i = 0;i<atr_new_len;i++){
+                    anw += ''+at_iput[i]+' = '+iput[i]+' , ';
+                }
+                anw += ':';
+                var k;
+                for(k = 0;k<num_classes;k++){
+                    anw += ' '+response['Class']+' = '+_classes[k]+'('+response['result_all'][_classes[k]]+')'+' , '
+                }
+                anw += 'result is '+response['the_best'];
+                anw += '</div>';
+                $('#anwser').append(anw);
+            }
+        });
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'frontend/base.html' %}
+{% block title %}Select{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{  nameof }}</h4>
+          <p class="card-text">Your Data</p>
+          <table class="table">
+              <thead>
+                  <tr>
+                      {% for i in Attribute %}
+                      <th>{{ i }}</th>
+                      {% endfor %}
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for row in DataInstance %}
+                  <tr>
+                      {% for x in row %}
+                      <td>{{ x }}</td>
+                      {% endfor %}
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+        </div>
+      </div>
+</div>
+
+{% endblock %}
