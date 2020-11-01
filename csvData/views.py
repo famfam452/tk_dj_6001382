@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
 from django.urls import reverse
+from django.contrib import messages
 import io,csv
 
 from . import urls
@@ -20,26 +21,28 @@ def index(request):
 
 def csv_upload(request):
     if request.method == 'GET':
-        return redirect('next')
+        return redirect('index')
     elif request.method == 'POST':
         csv_file = request.FILES['CSV_file']
-        if csv_file.multiple_chunks() != True:
-            data_read = csv_file.read().decode('UTF-8-SIG')
-        else:
-            for realine in csv_file.chunks():
-                data_read = realine.decode('UTF-8-SIG')
-        data_set = data_read.splitlines()
-        if data_set != [] and len(data_set) > 1:
-            attribute = data_set[0]
-            set_attr = attribute.split(',')
-            row_instance = []
-            for row in data_set[1:]:
-                row_split = row.split(',')
-                row_instance.append(row_split)
-            context = {'Attribute':set_attr,'DataInstance':row_instance}
-            if request.POST['nameOf']:
-                context.update({'nameof':request.POST['nameOf']})
-            return render(request,'frontend/table.html',context)
+        if csv_file.name.endswith('.csv'):
+            if csv_file.multiple_chunks() != True:
+                data_read = csv_file.read().decode('UTF-8-SIG')
+            else:
+                for realine in csv_file.chunks():
+                    data_read = realine.decode('UTF-8-SIG')
+            data_set = data_read.splitlines()
+            if data_set != [] and len(data_set) > 1:
+                attribute = data_set[0]
+                set_attr = attribute.split(',')
+                row_instance = []
+                for row in data_set[1:]:
+                    row_split = row.split(',')
+                    row_instance.append(row_split)
+                context = {'Attribute':set_attr,'DataInstance':row_instance}
+                if request.POST['nameOf']:
+                    context.update({'nameof':request.POST['nameOf']})
+                return render(request,'frontend/table.html',context)
+    messages.error(request,"Only CSV file and more than one attribute")
     return redirect('index')
 
 def select_class(request):

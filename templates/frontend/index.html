@@ -1,6 +1,13 @@
 {% extends 'frontend/baseNav.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-danger mb-2" role="alert">
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
 <form action="" method="POST">
     {% csrf_token %}
     <div class="midpost">
@@ -12,7 +19,7 @@
             </div>
         </div>
     </div>
-    
 </form>
+
 
 {% endblock %}
