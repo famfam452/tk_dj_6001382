@@ -1,1 +1,1 @@
-web: gunicorn inventory.wsgi
+web: gunicorn tk_django.wsgi
