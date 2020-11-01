@@ -40,7 +40,7 @@ class NaiiveBaye:
                 num += 1
         if id_y != 0:
             if num == 0:
-                return 1/(id_y+len(self.dataDomain[id_y]))
+                return 1/(id_y+len(self.dataDomain[iy]))
             return num/id_y
         else:
             return 0

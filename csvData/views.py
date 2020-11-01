@@ -34,6 +34,8 @@ def csv_upload(request):
             if data_set != [] and len(data_set) > 1:
                 attribute = data_set[0]
                 set_attr = attribute.split(',')
+                for s,setA in enumerate(set_attr):
+                    set_attr[s] = setA.strip() 
                 row_instance = []
                 for row in data_set[1:]:
                     row_split = row.split(',')
